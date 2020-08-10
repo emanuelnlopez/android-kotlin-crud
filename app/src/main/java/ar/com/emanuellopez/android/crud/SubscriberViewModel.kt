@@ -13,6 +13,9 @@ class SubscriberViewModel(private val repository: SubscriberRepository): ViewMod
 
     val subscribers= repository.subscribers
 
+    private var isUpdateOrDelete = false
+    private lateinit var subsciberToUpdateOrDelete: Subscriber
+
     @Bindable
     val inputName = MutableLiveData<String>()
     @Bindable
@@ -51,6 +54,15 @@ class SubscriberViewModel(private val repository: SubscriberRepository): ViewMod
 
     fun clearAll() = viewModelScope.launch {
         repository.deleteAll()
+    }
+
+    fun initUpdateAndDelete(subscriber: Subscriber) {
+        inputName.value = subscriber.name
+        inputEmail.value = subscriber.email
+        isUpdateOrDelete = true
+        subsciberToUpdateOrDelete = subscriber
+        saveOrUpdateButtonText.value = "Update"
+        clearAllOrDeleteButtonText.value = "Delete"
     }
 
     override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
