@@ -69,14 +69,18 @@ class SubscriberViewModel(private val repository: SubscriberRepository): ViewMod
         }
     }
 
+    private fun resetForm() {
+        inputName.value = null
+        inputEmail.value = null
+        isUpdateOrDelete = false
+        saveOrUpdateButtonText.value = "Save"
+        clearAllOrDeleteButtonText.value = "Clear All"
+    }
+
     fun update(subscriber: Subscriber) = viewModelScope.launch {
         val numberOfRowsUpdated = repository.update(subscriber)
         if (numberOfRowsUpdated > 0) {
-            inputName.value = null
-            inputEmail.value = null
-            isUpdateOrDelete = false
-            saveOrUpdateButtonText.value = "Save"
-            clearAllOrDeleteButtonText.value = "Clear All"
+            resetForm()
             statusMessage.value = Event("$numberOfRowsUpdated suscribers updated successfully")
         } else {
             statusMessage.value = Event("Error occurred!")
@@ -86,11 +90,7 @@ class SubscriberViewModel(private val repository: SubscriberRepository): ViewMod
     fun delete(subscriber: Subscriber) = viewModelScope.launch {
         val numberOfRowsDeleted = repository.delete(subscriber)
         if (numberOfRowsDeleted > 0) {
-            inputName.value = null
-            inputEmail.value = null
-            isUpdateOrDelete = false
-            saveOrUpdateButtonText.value = "Save"
-            clearAllOrDeleteButtonText.value = "Clear All"
+            resetForm()
             statusMessage.value = Event("$numberOfRowsDeleted suscribers deleted successfully")
         } else {
             statusMessage.value = Event("Error occurred!")
