@@ -31,10 +31,16 @@ class SubscriberViewModel(private val repository: SubscriberRepository): ViewMod
     }
 
     fun saveOrUpdate() {
-        val name = inputName.value!!
-        val email = inputEmail.value!!
+        if (isUpdateOrDelete) {
+            subscriberToUpdateOrDelete.name = inputName.value!!
+            subscriberToUpdateOrDelete.email = inputEmail.value !!
+            update(subscriberToUpdateOrDelete)
+        } else {
+            val name = inputName.value!!
+            val email = inputEmail.value!!
 
-        insert(Subscriber(0, name, email))
+            insert(Subscriber(0, name, email))
+        }
 
         inputName.value = null
         inputEmail.value = null
@@ -50,6 +56,15 @@ class SubscriberViewModel(private val repository: SubscriberRepository): ViewMod
 
     fun insert(subscriber: Subscriber) = viewModelScope.launch {
         repository.insert(subscriber)
+    }
+
+    fun update(subscriber: Subscriber) = viewModelScope.launch {
+        repository.update(subscriber)
+        inputName.value = null
+        inputEmail.value = null
+        isUpdateOrDelete = false
+        saveOrUpdateButtonText.value = "Save"
+        clearAllOrDeleteButtonText.value = "Clear All"
     }
 
     fun delete(subscriber: Subscriber) = viewModelScope.launch {
