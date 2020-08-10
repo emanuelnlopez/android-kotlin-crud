@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import ar.com.emanuellopez.android.crud.databinding.ListItemBinding
 import ar.com.emanuellopez.android.crud.db.Subscriber
 
-class SubscriberAdapter(private val subscribersList: List<Subscriber>,
-                        private val clickListener: (Subscriber)->Unit)
+class SubscriberAdapter(private val clickListener: (Subscriber)->Unit)
     : RecyclerView.Adapter<SubscriberViewHolder>() {
+
+    private val subscribersList = ArrayList<Subscriber>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubscriberViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ListItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.list_item, parent, false)
@@ -22,6 +24,11 @@ class SubscriberAdapter(private val subscribersList: List<Subscriber>,
 
     override fun onBindViewHolder(holder: SubscriberViewHolder, position: Int) {
         holder.bind(subscribersList[position], clickListener)
+    }
+
+    fun setSubscribersList(subscribers: List<Subscriber>) {
+        subscribersList.clear()
+        subscribersList.addAll(subscribers)
     }
 
 }

@@ -16,6 +16,7 @@ import ar.com.emanuellopez.android.crud.db.SubscriberRepository
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var subscriberViewModel: SubscriberViewModel
+    private lateinit var adapter: SubscriberAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,13 +37,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         binding.subscriberRecyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = SubscriberAdapter({selectedItem: Subscriber->listItemClicked(selectedItem)})
+        binding.subscriberRecyclerView.adapter = adapter
         displaySubscribersList()
     }
 
     private fun displaySubscribersList() {
         subscriberViewModel.subscribers.observe(this, Observer {
             Log.i("MyTag", it.toString())
-            binding.subscriberRecyclerView.adapter = SubscriberAdapter(it, {selectedItem: Subscriber->listItemClicked(selectedItem)})
+            adapter.setSubscribersList(it)
+            adapter.notifyDataSetChanged()
         })
     }
 
