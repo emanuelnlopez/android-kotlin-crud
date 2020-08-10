@@ -3,11 +3,13 @@ package ar.com.emanuellopez.android.crud
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ar.com.emanuellopez.android.crud.databinding.ActivityMainBinding
+import ar.com.emanuellopez.android.crud.db.Subscriber
 import ar.com.emanuellopez.android.crud.db.SubscriberDatabase
 import ar.com.emanuellopez.android.crud.db.SubscriberRepository
 
@@ -35,7 +37,11 @@ class MainActivity : AppCompatActivity() {
     private fun displaySubscribersList() {
         subscriberViewModel.subscribers.observe(this, Observer {
             Log.i("MyTag", it.toString())
-            binding.subscriberRecyclerView.adapter = SubscriberAdapter(it)
+            binding.subscriberRecyclerView.adapter = SubscriberAdapter(it, {selectedItem: Subscriber->listItemClicked(selectedItem)})
         })
+    }
+
+    private fun listItemClicked(subscriber: Subscriber) {
+        Toast.makeText(this, "Selected name is ${subscriber.name}", Toast.LENGTH_SHORT).show()
     }
 }
